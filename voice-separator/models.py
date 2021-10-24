@@ -1,12 +1,7 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Oct 20 13:27:51 2021
-
-@author: magla
-"""
-
-#from same website
 import numpy as np
+from nussl import separation,evaluation
+from dataviz import visualize_and_embed
+
 def _report_sdr(approach, scores):
     SDR = {}
     SIR = {}
@@ -23,10 +18,6 @@ def _report_sdr(approach, scores):
             print(f'{key} SI-SAR: {SAR[key]:.2f} dB')
             print()
     print()
-    
-# from same website
-from nussl import separation,evaluation
-from dataviz import visualize_and_embed
 
 def run_viz_and_evaluate(alg,sources_list):
     alg_estimates = alg()
