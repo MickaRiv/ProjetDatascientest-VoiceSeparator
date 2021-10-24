@@ -40,4 +40,5 @@ def evaluate_dict_models(alg_dict, truth):
     for name, alg in alg_dict.items():
         score = evaluate_model(alg, truth)
         scores.append(score.update({"Alg":name}))
+    print(scores)
     return pd.DataFrame.from_records(scores).set_index("Alg")
