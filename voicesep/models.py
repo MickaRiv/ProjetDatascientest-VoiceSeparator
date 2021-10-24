@@ -1,6 +1,6 @@
 import numpy as np
 from nussl import separation, evaluation
-from dataviz import visualize_and_embed
+from .dataviz import visualize_and_embed
 import pandas as pd
 
 def _report_sdr(alg_name, scores):
