@@ -1,13 +1,14 @@
 import numpy as np
-from nussl import separation,evaluation
-from dataviz import visualize_and_embed
+from nussl import separation, evaluation
+from .dataviz import visualize_and_embed
+import pandas as pd
 
-def _report_sdr(approach, scores):
+def _report_sdr(alg_name, scores):
     SDR = {}
     SIR = {}
     SAR = {}
-    print(approach)
-    print(''.join(['-' for i in range(len(approach))]))
+    print(alg_name)
+    print(''.join(['-' for i in range(len(alg_name))]))
     for key in scores:
         if key not in ['combination', 'permutation']:
             SDR[key] = np.mean(scores[key]['SI-SDR'])
@@ -19,16 +20,33 @@ def _report_sdr(approach, scores):
             print()
     print()
 
-def run_viz_and_evaluate(alg,sources_list):
+def evaluate_model(alg, truth):
     alg_estimates = alg()
 
     if isinstance(alg, separation.primitive.HPSS):
         alg_estimates = alg_estimates[::-1]
 
     visualize_and_embed(alg_estimates)
-    print(sources_list)
+    print(truth)
     bss = evaluation.BSSEvalScale(
-        sources_list, alg_estimates,
-        source_labels=['acc', 'vox'])
+        truth, alg_estimates,
+        source_labels=['accompaniment', 'voice'])
     scores = bss.evaluate()
     _report_sdr(str(alg).split(' on')[0], scores)
+    return scores
+
+def evaluate_dict_models(alg_dict, truth):
+    scores = []
+    for name, alg in alg_dict.items():
+        score = evaluate_model(alg, truth)
+        score.pop("combination")
+        score.pop("permutation")
+        score = {(subject,metric):np.mean(val)
+                 for subject,metrics in score.items()
+                 for metric,val in metrics.items()}
+        score.update({"Alg":name})
+        scores.append(score)
+    print(scores)
+    scores_df = pd.DataFrame.from_records(scores).set_index("Alg")
+    scores_df.columns = pd.MultiIndex.from_tuples(scores_df.columns)
+    return scores_df
