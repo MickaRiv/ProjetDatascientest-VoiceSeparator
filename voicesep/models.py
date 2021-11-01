@@ -3,7 +3,7 @@ from nussl import separation, evaluation
 from .dataviz import visualize_and_embed
 import pandas as pd
 
-def _report_sdr(alg_name, scores):
+def report_sdr(alg_name, scores):
     SDR = {}
     SIR = {}
     SAR = {}
@@ -23,16 +23,16 @@ def _report_sdr(alg_name, scores):
 def evaluate_model(alg, truth):
     alg_estimates = alg()
 
-    if isinstance(alg, separation.primitive.HPSS):
+    if (isinstance(alg, separation.primitive.HPSS) or
+        isinstance(alg, separation.primitive.TimbreClustering)):
         alg_estimates = alg_estimates[::-1]
 
     visualize_and_embed(alg_estimates)
-    print(truth)
     bss = evaluation.BSSEvalScale(
         truth, alg_estimates,
         source_labels=['accompaniment', 'voice'])
     scores = bss.evaluate()
-    _report_sdr(str(alg).split(' on')[0], scores)
+    report_sdr(str(alg).split(' on')[0], scores)
     return scores
 
 def evaluate_dict_models(alg_dict, truth):
