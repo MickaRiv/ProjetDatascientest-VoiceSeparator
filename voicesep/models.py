@@ -46,7 +46,6 @@ def evaluate_dict_models(alg_dict, truth):
                  for metric,val in metrics.items()}
         score.update({"Alg":name})
         scores.append(score)
-    print(scores)
     scores_df = pd.DataFrame.from_records(scores).set_index("Alg")
     scores_df.columns = pd.MultiIndex.from_tuples(scores_df.columns)
     return scores_df
