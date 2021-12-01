@@ -21,8 +21,8 @@ def train_or_test(track_name):
     for directory in ["train","test"]:
         if file_in_dir(track_name, directory):
             return directory
-        else:
-            raise IOError(f"Track '{track_name}' not found")
+# si on est là c'est qu'on n'a pas fait return
+    raise IOError(f"Track '{track_name}' not found")
     
 def track_duration(track_info):
     file = os.path.join("/content","drive","MyDrive","Projet Datascientest","musdb18",track_info["Dataset"],f"{track_info['Track name']}.stem.mp4")
