@@ -20,25 +20,27 @@ def report_sdr(alg_name, scores):
             print()
     print()
 
-def evaluate_model(alg, truth):
+def evaluate_model(alg, truth, visualize=True, report=True):
     alg_estimates = alg()
 
     if (isinstance(alg, separation.primitive.HPSS) or
         isinstance(alg, separation.primitive.TimbreClustering)):
         alg_estimates = alg_estimates[::-1]
-
-    visualize_and_embed(alg_estimates)
+    
+    if visualize:
+        visualize_and_embed(alg_estimates)
     bss = evaluation.BSSEvalScale(
         truth, alg_estimates,
         source_labels=['accompaniment', 'voice'])
     scores = bss.evaluate()
-    report_sdr(str(alg).split(' on')[0], scores)
+    if report:
+        report_sdr(str(alg).split(' on')[0], scores)
     return scores
 
-def evaluate_dict_models(alg_dict, truth):
+def evaluate_dict_models(alg_dict, truth, **kwargs):
     scores = []
     for name, alg in alg_dict.items():
-        score = evaluate_model(alg, truth)
+        score = evaluate_model(alg, truth, **kwargs)
         score.pop("combination")
         score.pop("permutation")
         score = {(subject,metric):np.mean(val)
