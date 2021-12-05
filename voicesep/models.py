@@ -32,7 +32,8 @@ def evaluate_model(alg, truth, visualize=True, report=True):
     if visualize:
         visualize_and_embed(alg_estimates)
     bss = evaluation.BSSEvalScale(
-        truth, alg_estimates)
+        truth, list(alg_estimates.values()),
+        source_labels=['accompaniment', 'voice'])
     scores = bss.evaluate()
     if report:
         report_sdr(str(alg).split(' on')[0], scores)
