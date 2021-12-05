@@ -1,4 +1,4 @@
-from openunmix import separate
+from openunmix.predict import separate
 from torch import Tensor
 import nussl
 
