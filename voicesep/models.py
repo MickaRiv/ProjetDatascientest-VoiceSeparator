@@ -23,8 +23,7 @@ def report_sdr(alg_name, scores):
 def evaluate_model(alg, truth, visualize=True, report=True):
     alg_estimates = alg()
 
-    if (isinstance(alg, separation.primitive.HPSS) or
-        isinstance(alg, separation.primitive.TimbreClustering)):
+    if (isinstance(alg, separation.primitive.HPSS)):
         alg_estimates = alg_estimates[::-1]
     
     alg_estimates = {"Accompaniment":alg_estimates[0],
