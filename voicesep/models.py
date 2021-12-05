@@ -27,6 +27,8 @@ def evaluate_model(alg, truth, visualize=True, report=True):
         isinstance(alg, separation.primitive.TimbreClustering)):
         alg_estimates = alg_estimates[::-1]
     
+    alg_estimates = {"Accompaniment":alg_estimates[0],
+                     "Voice":alg_estimates[1]}
     if visualize:
         visualize_and_embed(alg_estimates)
     bss = evaluation.BSSEvalScale(
