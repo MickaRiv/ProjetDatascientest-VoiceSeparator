@@ -39,4 +39,4 @@ def visualize_and_embed(sources):
     plt.tight_layout()
     plt.show()
 
-    play_utils.multitrack(sources, ext='.wav')
+    play_utils.multitrack(sources)
