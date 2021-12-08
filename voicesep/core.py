@@ -6,12 +6,15 @@ from typing import Dict, Tuple, Optional, IO
 import sys
 
 
-def get_musdb_data(gather_accompaniment=False):
+def get_musdb_data(gather_accompaniment=False,folder=None,subfolder=None):
     if gather_accompaniment:
         tfm = datasets.transforms.SumSources([['drums', 'bass', 'other']])
     else:
         tfm = None
-    return datasets.MUSDB18(download=True, transform=tfm)
+    if folder is None:
+        return datasets.MUSDB18(download=True, transform=tfm)
+    else:
+        return datasets.MUSDB18(folder=folder, subsets=subfolder, transform=tfm)
 
 def copy_process_streams(process: sp.Popen):
     def raw(stream: Optional[IO[bytes]]) -> IO[bytes]:
