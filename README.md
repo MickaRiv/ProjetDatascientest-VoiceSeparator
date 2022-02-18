@@ -24,7 +24,7 @@ La librairie python ```musdb``` permet de télécharger des extraits de 7 second
 > **Il faudra adapter les notebooks à votre utilisation, i.e. connecter votre drive si nécessaire et donner le chemin de la base de données musdb18**
  
 ## Exécution des notebooks sur Google Colab
-Les notebooks ayant été développés via Google Colab, vous trouverez au début de chaque notebook l'installation des paquets python nécessaires. L'installation ne sera pas systématiquement nécessaire hors colab, voici les paquets nécessaires :
+Les notebooks ayant été développés via Google Colab, vous trouverez au début de chaque notebook l'installation des paquets python nécessaires grâce au fichier setup.py. Voici les paquets nécessaires :
 * ```pip install nussl```
 
 ## Description des notebooks
