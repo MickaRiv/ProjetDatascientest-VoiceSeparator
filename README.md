@@ -33,5 +33,5 @@ Les notebooks ayant été développés via Google Colab, vous trouverez au débu
 * models.ipynb : construction de modèles... ??? *--> Classification, à retirer ?*
 * U_net.ipynb : 
 * U_net_sans_generateur.ipynb :
-* metrics.ipynb : calcul des métriques sur les UNet construits *à fusionner dans benchmark_complete*
+* metrics.ipynb : calcul des métriques sur les UNet construits *--> à fusionner dans benchmark_complete*
 * benchmark_complete.ipynb : calcul des scores et comparaison des modèles de la littérature et des UNet construits sur la base de test complète
