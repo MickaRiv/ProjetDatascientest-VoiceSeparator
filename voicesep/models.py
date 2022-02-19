@@ -24,18 +24,27 @@ def evaluate_model(alg, truth, visualize=True, report=True):
     alg_estimates = alg()
 
     i1, i2 = 0, 1
-    if (isinstance(alg, separation.primitive.HPSS) or
-        isinstance(alg, separation.primitive.TimbreClustering)):
+    if (isinstance(alg, separation.primitive.HPSS)):
         i1, i2 = i2, i1
     
     alg_estimates = {"Accompaniment":alg_estimates[i1],
                      "Voice":alg_estimates[i2]}
-    if visualize:
-        visualize_and_embed(alg_estimates)
     bss = evaluation.BSSEvalScale(
         truth, [alg_estimates[key] for key in ["Accompaniment","Voice"]],
         source_labels=['accompaniment', 'voice'])
     scores = bss.evaluate()
+    if isinstance(alg, separation.primitive.TimbreClustering):
+        alt_bss = evaluation.BSSEvalScale(
+                truth, [alg_estimates[key] for key in ["Voice","Accompaniment"]],
+                source_labels=['accompaniment', 'voice'])
+        alt_scores = alt_bss.evaluate()
+        a = np.mean([np.mean(alt_scores[key]['SI-SDR']) for key in ['accompaniment', 'voice']])
+        b = np.mean([np.mean(scores[key]['SI-SDR']) for key in ['accompaniment', 'voice']])
+        print(a,b)
+        if a > b:
+            scores = alt_scores
+    if visualize:
+        visualize_and_embed(alg_estimates)
     if report:
         report_sdr(str(alg).split(' on')[0], scores)
     return scores
