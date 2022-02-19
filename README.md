@@ -29,8 +29,8 @@ Les notebooks ayant été développés via Google Colab, vous trouverez au débu
 
 ## Description des notebooks
 * dataviz.ipynb : exploration, visualisation et écoute de la base données musdb (7 secondes) et du fichier liste_musdb18.csv
-* benchmark.ipynb : test des modèles trouvés dans la littérature
-* models.ipynb : construction de modèles... ???
+* benchmark.ipynb : test et comparaison des modèles trouvés dans la littérature sur un extrait musical
+* models.ipynb : construction de modèles... ??? <span style="color:red">--> Classification, à retirer ?</span>
 * U_net.ipynb : 
 * U_net_sans_generateur.ipynb :
 * metrics.ipynb : comparaison de tous les modèles
