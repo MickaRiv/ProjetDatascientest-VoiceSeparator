@@ -78,7 +78,7 @@ def reshape(*X, patch_size=128, extend=False):
   
 def get_data(all_data, num, freq, window_length, hop_length, cache_on_disk, cache_path):
 
-    magmix, magvoice, *_ = preprocess(all_data[num]["sources"]["vocals"], all_data[num]["mix"],
+    magmix, magvoice, *_ = preprocess(all_data[num]["mix"], all_data[num]["sources"]["vocals"],
                                       freq=freq, window_length=window_length, hop_length=hop_length)
     magmix = magmix[:,:,0]
     magvoice = magvoice[:,:,0]
