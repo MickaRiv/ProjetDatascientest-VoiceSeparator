@@ -33,6 +33,6 @@ Le bon fonctionnement des notebook requiert de bien suivre la structure définie
 ## Description des notebooks
 * `dataviz.ipynb` : exploration, visualisation et écoute de la base données musdb (7 secondes) et du fichier liste_musdb18.csv.
 * `benchmark.ipynb` : tests, visualisations et comparaison rapide des modèles trouvés dans la littérature sur un extrait musical.
-* `U_net.ipynb` : construction et entraînement d'un modèle UNet avec générateur, sans augmentation de données.
-* `U_net_sans_generateur.ipynb` : construction et entraînement d'un modèle UNet sans générateur, avec augmentation de données.
+* `U_net.ipynb` : construction et entraînement d'un modèle UNet avec générateur, sans augmentation de données. L'accélérateur matériel GPU est activé sur Google Colab.
+* `U_net_sans_generateur.ipynb` : construction et entraînement d'un modèle UNet sans générateur, avec augmentation de données. L'accélérateur matériel GPU est activé sur Google Colab.
 * `benchmark_complete.ipynb` : calcul des scores et comparaison des modèles de la littérature et des UNet construits sur la base de test complète.
