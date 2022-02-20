@@ -158,7 +158,7 @@ class UNetModel:
         self.patch_size = patch_size
         self.nfreq = nfreq
     def __call__(self):
-        magmix, phase, norm = preprocess(self.mix)
+        magmix, phase, norm = preprocess(self.mix,freq=self.freq,window_length=self.window_length,hop_length=self.hop_length)
         X_mix = reshape(magmix[:,:,0], patch_size=self.patch_size, extend=True)
         X_voice_pred = self.model.predict(X_mix)
         magmix_pred = X_voice_pred.reshape(-1,self.nfreq,1).transpose(1,0,2)
