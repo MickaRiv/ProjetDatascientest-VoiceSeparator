@@ -8,7 +8,8 @@ def preprocess(*music_data,
                freq=8192,
                window_length=1023,
                hop_length=768,
-               normalize=True):
+               normalize=True,
+               predvoix=False):
   
     mags = []
 
@@ -35,7 +36,15 @@ def preprocess(*music_data,
         norm = magfirst.max()
         for i,mag in enumerate(mags):
             mags[i] /= norm
-        return (*mags, phasefirst, norm)
+            
+        if predvoix:
+            maxtvoice=np.max(mags[1], axis=0)
+            maxtvoice=10*np.log(maxtvoice+1e-10)
+            db_cutoff=-20
+            tmask=np.where(maxtvoice  < db_cutoff, 0, 1)
+            return (*mags, phasefirst, norm, tmask)
+        else:
+            return (*mags, phasefirst, norm)
 
     return (*mags, phasefirst)
 
