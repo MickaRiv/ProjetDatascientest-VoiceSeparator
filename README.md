@@ -31,7 +31,6 @@ Les notebooks ayant été développés via Google Colab, vous trouverez au débu
 * dataviz.ipynb : exploration, visualisation et écoute de la base données musdb (7 secondes) et du fichier liste_musdb18.csv
 * benchmark.ipynb : tests, visualisations et comparaison rapide des modèles trouvés dans la littérature sur un extrait musical
 * models.ipynb : construction de modèles... ??? *--> Classification, à retirer ?*
-* U_net.ipynb : 
+* U_net.ipynb : construction et entraînement d'un modèle UNet avec générateur, sans augmentation de données.
 * U_net_sans_generateur.ipynb :
-* metrics.ipynb : calcul des métriques sur les UNet construits *--> à fusionner dans benchmark_complete*
 * benchmark_complete.ipynb : calcul des scores et comparaison des modèles de la littérature et des UNet construits sur la base de test complète
