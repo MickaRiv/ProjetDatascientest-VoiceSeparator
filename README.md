@@ -10,10 +10,10 @@ Ce projet s'insère dans la formation Data Scientest : l'objectif est d'établir
 
 ## Architecture
 Ce dossier contient 3 répertoires :
-  1. **data** contient les données, en l'occurence le listing des musiques utilisées pour l'apprentissage/validation. Par souci d'espace disque sur git, les sources audio sont à télécharger en ligne
-  2. **notebooks** contient les python notebooks développés dans le cadre du projet, leur descrition est donnée plus bas
-  3. **voicesep** est la librairie des fonctions python appelées dans les notebooks via ```import voicesep``` au préalable
-  4. **doc** contient les 2 rapports rendus dans le cadre de la formation
+  1. **data** contient les données, en l'occurence le listing des musiques utilisées pour l'apprentissage/validation. Par souci d'espace disque sur git, les sources audio sont à télécharger en ligne.
+  2. **notebooks** contient les python notebooks développés dans le cadre du projet, leur descrition est donnée plus bas.
+  3. **voicesep** est la librairie des fonctions python appelées dans les notebooks via ```import voicesep``` au préalable.
+  4. **doc** contient les différents rapports rendus dans le cadre de la formation (présentation du sujet, analyse des données, rapport final).
 
 ## Obtention des données audio
 La librairie python ```musdb``` permet de télécharger des extraits de 7 secondes de chaque musique, mais pour disposer des musiques entières il est nécessaire de :
