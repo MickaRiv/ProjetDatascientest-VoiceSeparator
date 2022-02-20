@@ -23,14 +23,16 @@ La librairie python ```musdb``` permet de télécharger des extraits de 7 second
     * sur un drive si vous utilisez les ressources de Google Colab
 > **Il faudra adapter les notebooks à votre utilisation, i.e. connecter votre drive si nécessaire et donner le chemin de la base de données musdb18**
  
-## Exécution des notebooks sur Google Colab
-Les notebooks ayant été développés via Google Colab, vous trouverez au début de chaque notebook l'installation des paquets python nécessaires grâce au fichier setup.py. Voici les paquets nécessaires : *????????????*
-* ```pip install nussl```
+## Exécution des notebooks
+Le bon fonctionnement des notebook requiert de bien suivre la structure définie :
+* installation des librairies nécessaires (dont notre librairie voicesep),
+* import de tous les paquets python requis,
+* préparation de l'environnement de travail (montage du drive, choix des paths, ...),
+* lancement des calculs.
 
 ## Description des notebooks
-* dataviz.ipynb : exploration, visualisation et écoute de la base données musdb (7 secondes) et du fichier liste_musdb18.csv
-* benchmark.ipynb : tests, visualisations et comparaison rapide des modèles trouvés dans la littérature sur un extrait musical
-* models.ipynb : construction de modèles... ??? *--> Classification, à retirer ?*
+* dataviz.ipynb : exploration, visualisation et écoute de la base données musdb (7 secondes) et du fichier liste_musdb18.csv.
+* benchmark.ipynb : tests, visualisations et comparaison rapide des modèles trouvés dans la littérature sur un extrait musical.
 * U_net.ipynb : construction et entraînement d'un modèle UNet avec générateur, sans augmentation de données.
-* U_net_sans_generateur.ipynb :
-* benchmark_complete.ipynb : calcul des scores et comparaison des modèles de la littérature et des UNet construits sur la base de test complète
+* U_net_sans_generateur.ipynb : construction et entraînement d'un modèle UNet sans générateur, avec augmentation de données.
+* benchmark_complete.ipynb : calcul des scores et comparaison des modèles de la littérature et des UNet construits sur la base de test complète.
