@@ -9,7 +9,7 @@ import os,sys
 # Pour la table des matières 
 #   --> utiliser toc.title("titre")
 #-------------------------------------
-
+#%% table des matières
 class Header:
     tag: str = ""
 
@@ -85,7 +85,7 @@ class TOC_Sidebar(TOC):
         self._placeholder = st.sidebar.empty()
         
 toc = TOC_Sidebar()
-
+#%%
 #-------------------------------------
 # Définition des fonctions 
 #-------------------------------------
@@ -147,7 +147,7 @@ df = get_all_dataviz_csv()
 df.columns
 cols = ['Track name','Genre']
 st_ms = st.multiselect('Colonnes',df.columns.to_list(),default=cols)
-df
+st_ms
 
 sd = st.selectbox(
     "Sélectionne un Plot",
