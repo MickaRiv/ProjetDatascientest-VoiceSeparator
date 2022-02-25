@@ -30,7 +30,7 @@ class Header:
 
     def toc_item(self) -> str:
         """Make markdown item for TOC listing. Example:
-           '  - <a href='#abc'>Abc</a>'
+           '  - <a href=#abc>Abc</a>'
         """
         return f"{self.spaces}- [{self.text}](#{self.id})"
 
