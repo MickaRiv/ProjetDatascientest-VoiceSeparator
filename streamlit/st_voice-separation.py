@@ -134,7 +134,7 @@ st.code("Ceci est du st.code")
 st.latex("Là \ c'est \ du\ latex\ :\ \int a x^2\,df")
 
 from PIL import Image
-image = Image.open(os.path.join("/content","drive","MyDrive","image.jpg")
+image = Image.open(os.path.join("/content","drive","MyDrive","image.jpg"))
 
 st.image(image, caption='Ceci est une image')
 
