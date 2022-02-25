@@ -97,6 +97,7 @@ def get_dataviz_csv():
 
 def get_all_dataviz_csv():
     url = os.path.join('C:\\Users','magla','Documents','GitHub','ProjetDatascientest-VoiceSeparator','data','liste_musdb18_complet.csv')
+    url = "https://raw.githubusercontent.com/MickaRiv/ProjetDatascientest-VoiceSeparator/main/data/liste_musdb18_complet.csv"
     return pd.read_csv(url)
 
 
@@ -107,6 +108,10 @@ def get_all_scores_csv():
 
 musdb_path = os.path.join('C:\\Users','magla','Documents',"Projet_DataScientest","musdb18")
 unets_path = os.path.join('C:\\Users','magla','Documents',"Projet_DataScientest","UNet")
+
+# Si colab et drive monté
+musdb_path = os.path.join("/content","drive","MyDrive","Projet Datascientest","musdb18")
+unets_path = os.path.join("/content","drive","MyDrive","Projet Datascientest","UNet")
 #-------------------------------------
 # Le streamlit 
 #-------------------------------------
