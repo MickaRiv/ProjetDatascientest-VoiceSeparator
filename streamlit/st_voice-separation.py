@@ -46,7 +46,7 @@ class H1(Header):
 class H2(Header):
     tag = "h2"
 
-assert H2("Abc").toc_item() == "  - [Abc]('#abc')"
+assert H2("Abc").toc_item() == "  - [Abc](#abc)"
 
 class H3(Header):
     tag = "h3"
