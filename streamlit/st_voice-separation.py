@@ -32,7 +32,7 @@ class Header:
         """Make markdown item for TOC listing. Example:
            '  - <a href='#abc'>Abc</a>'
         """
-        return f"{self.spaces}- [{self.text}]('#{self.id}')"
+        return f"{self.spaces}- [{self.text}](#{self.id})"
 
     @property
     def spaces(self):
