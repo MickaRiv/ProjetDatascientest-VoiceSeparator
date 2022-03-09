@@ -2,16 +2,14 @@
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-import seaborn as sns
 import nussl
 import os
-import numpy as np
 import tensorflow as tf
 from voicesep.core import get_musdb_data
 from voicesep.unet import UNetModel
 from pydub import AudioSegment
 from os import listdir
-from os.path import isfile, isdir, join
+from os.path import isfile, join
 import shutil
 from tensorflow.keras.models import load_model
 from voicesep.demucs import DemucsModel
@@ -30,6 +28,19 @@ def get_all_dataviz_csv():
 
 def myloss(y_true, y_pred):
   return tf.math.reduce_sum(abs(y_true - y_pred)) + abs(tf.math.reduce_sum(y_true) - tf.math.reduce_sum(y_pred))
+
+@st.cache(allow_output_mutation=True)
+def cache_load_model(filepath, custom_objects=None):
+    return load_model(filepath, custom_objects)
+
+@st.cache(allow_output_mutation=True)
+def cache_UNetModel(mix,model,freq,window_length,hop_length,patch_size,nfreq):
+    return UNetModel(mix,model,freq,window_length,hop_length,patch_size,nfreq)
+
+@st.cache(allow_output_mutation=True)
+def cache_DemucsModel(signal,modele,in_path,out_path):
+    return DemucsModel(signal,modele,in_path,out_path)
+
 
 #musdb_path = os.path.join('C:\\Users','magla','Documents',"Projet_DataScientest","musdb18")
 #unets_path = os.path.join('C:\\Users','magla','Documents',"Projet_DataScientest","UNet")
@@ -86,14 +97,14 @@ if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
     model_path = os.path.join(unets_path,model)
     
     if model=="model_20220202_quick" or model=="model_20220127_long_train_sd+ds":
-        unet = load_model(model_path, custom_objects={'myloss': myloss})
+        unet = cache_load_model(model_path, custom_objects={'myloss': myloss})
         
     elif model=="model_20220101_init" or \
         model=="model_20220202_100x2_2.3M_maxepoch" or \
         model=="model_20220206_90x2_2.3M_4k_L2_long" or \
         model=="model_20220206_90x2_2.3M_4k_L2" or \
         model=="model_20220207_aug=8_4k" :
-        unet = load_model(model_path)
+        unet = cache_load_model(model_path)
     
 elif quel_modele=="Demucs" or quel_modele=="Spleeter" or quel_modele=="OpenUnmix" or quel_modele=="Repet":
     freq = 16384
@@ -154,17 +165,17 @@ if stem_ou_mp3 == 'stem':
         "**La voix prédite :**"
         signal = data["mix"]
         if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
-            unet_separator = UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
+            separator = cache_UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
         elif quel_modele=="Demucs":
-            unet_separator = DemucsModel(signal,"mdx_extra_q",in_path,out_path)
+            separator = cache_DemucsModel(signal,"mdx_extra_q",in_path,out_path)
         elif quel_modele=="Spleeter":
-            unet_separator = SpleeterModel(signal,in_path,out_path)
+            separator = SpleeterModel(signal,in_path,out_path)
         elif quel_modele=="OpenUnmix":
-            unet_separator = OpenUnmixModel(signal,"umx")
+            separator = OpenUnmixModel(signal,"umx")
         elif quel_modele=="Repet":
-            unet_separator = nussl.separation.primitive.Repet(signal)
+            separator = nussl.separation.primitive.Repet(signal)
 
-        audio_pred = unet_separator()[1]
+        audio_pred = separator()[1]
         audio_pred.write_audio_to_file('pred.wav')
         st.audio('pred.wav', format='audio/wav')
         fig = plt.figure(figsize=(12, 6))
@@ -204,17 +215,17 @@ else:
             signal = nussl.AudioSignal(uploaded_file.name)
             
             if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
-                unet_separator = UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
+                separator = cache_UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
             elif quel_modele=="Demucs":
-                unet_separator = DemucsModel(signal,"mdx_extra_q",in_path,out_path)
+                separator = cache_DemucsModel(signal,"mdx_extra_q",in_path,out_path)
             elif quel_modele=="Spleeter":
-                unet_separator = SpleeterModel(signal,in_path,out_path)
+                separator = SpleeterModel(signal,in_path,out_path)
             elif quel_modele=="OpenUnmix":
-                unet_separator = OpenUnmixModel(signal,"umx")
+                separator = OpenUnmixModel(signal,"umx")
             elif quel_modele=="Repet":
-                unet_separator = nussl.separation.primitive.Repet(signal)
+                separator = nussl.separation.primitive.Repet(signal)
    
-            audio_pred = unet_separator()[1]
+            audio_pred = separator()[1]
             audio_pred.write_audio_to_file('pred.wav')
             st.audio('pred.wav', format='audio/wav')
             fig = plt.figure(figsize=(12, 6))
