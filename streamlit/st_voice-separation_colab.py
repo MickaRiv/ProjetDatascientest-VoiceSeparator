@@ -46,7 +46,7 @@ def cache_DemucsModel(signal,modele,in_path,out_path):
 #unets_path = os.path.join('C:\\Users','magla','Documents',"Projet_DataScientest","UNet")
 
 # Si colab et drive monté
-musdb_path = os.path.join("/content","drive","MyDrive","Projet Datascientest","musdb18")
+musdb_path = os.path.join("/content","drive","MyDrive","Projet Datascientest","musdb18","demo_streamlit")
 unets_path = os.path.join("/content","drive","MyDrive","Projet Datascientest","UNet")
 #-------------------------------------
 # Le streamlit 
@@ -54,15 +54,13 @@ unets_path = os.path.join("/content","drive","MyDrive","Projet Datascientest","U
 #%% dev de la sidebar avec chargement du modèle --------------------------
 from PIL import Image
 image = Image.open("image.jpg")
-st.sidebar.image(image, caption='Ceci est une image')
+st.sidebar.image(image, caption='Ephi, Mickaël et Stany')
 
 # pour lister tous les modèles
 #models = [f for f in listdir(unets_path) if isdir(join(unets_path, f))]
 #model = st.sidebar.radio('Choisissez votre modèle',models)
 
-# on charge 
-
-
+st.title("Séparation de voix")
 
 quel_modele = st.sidebar.selectbox("Modèle :",
                               ["UNet 8 kHz","UNet 4 kHz","Demucs","Repet"])
@@ -106,7 +104,7 @@ if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
         model=="model_20220207_aug=8_4k" :
         unet = cache_load_model(model_path)
     
-elif quel_modele=="Demucs" or quel_modele=="Spleeter" or quel_modele=="OpenUnmix" or quel_modele=="Repet":
+elif quel_modele=="Spleeter" or quel_modele=="OpenUnmix" or quel_modele=="Repet":
     freq = 16384
     tmp_path = "tmp"
     if not os.path.exists(tmp_path):
@@ -117,12 +115,17 @@ elif quel_modele=="Demucs" or quel_modele=="Spleeter" or quel_modele=="OpenUnmix
     out_path = os.path.join(tmp_path,"output")
     if not os.path.exists(out_path):
         os.mkdir(out_path)
+        
+            
+elif quel_modele=="Demucs":
+    freq = 32768
+
 #%% ------------------------------------------
 stem_ou_mp3 = st.selectbox(
-      'Format de la musique à traiter : stem de la base musdb18 ou mp3/wav de votre choix :',
-      ['stem','mp3/wav'])
+      'Musique à traiter : base musdb18 ou mp3/wav de votre choix',
+      ['musdb18','mp3/wav'])
 
-if stem_ou_mp3 == 'stem':
+if stem_ou_mp3 == 'musdb18':
     train_ou_test = st.selectbox("Voulez-vous une musique de la base train ou test ?",
                                  ['test','train'])
     musdb18path = os.path.join(musdb_path,train_ou_test)
@@ -163,21 +166,33 @@ if stem_ou_mp3 == 'stem':
 
     with col3:
         "**La voix prédite :**"
-        signal = data["mix"]
-        if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
-            separator = cache_UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
-        elif quel_modele=="Demucs":
-            separator = cache_DemucsModel(signal,"mdx_extra_q",in_path,out_path)
-        elif quel_modele=="Spleeter":
-            separator = SpleeterModel(signal,in_path,out_path)
-        elif quel_modele=="OpenUnmix":
-            separator = OpenUnmixModel(signal,"umx")
-        elif quel_modele=="Repet":
-            separator = nussl.separation.primitive.Repet(signal)
+        if quel_modele != "Demucs":
+            signal = data["mix"]
+            if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
+                separator = cache_UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
+            # elif quel_modele=="Demucs":
+            #     separator = cache_DemucsModel(signal,"mdx_extra_q",in_path,out_path)
+            elif quel_modele=="Spleeter":
+                separator = SpleeterModel(signal,in_path,out_path)
+            elif quel_modele=="OpenUnmix":
+                separator = OpenUnmixModel(signal,"umx")
+            elif quel_modele=="Repet":
+                separator = nussl.separation.primitive.Repet(signal)
 
-        audio_pred = separator()[1]
-        audio_pred.write_audio_to_file('pred.wav')
-        st.audio('pred.wav', format='audio/wav')
+            audio_pred = separator()[1]
+            audio_pred.write_audio_to_file('pred.wav')
+            st.audio('pred.wav', format='audio/wav')
+        else:
+            #os.system("demucs -n mdx_extra_q --two-stems=vocals mix.wav")
+            try:
+                shutil.copyfile(join(musdb18path,'separated','mdx_extra_q',titre_musdb[:-4],'vocals.wav'),'vocals.wav')
+                st.audio('vocals.wav', format='audio/wav')
+                audio_pred = nussl.AudioSignal('vocals.wav')
+            except:
+                os.system("demucs -n mdx_extra_q --two-stems=vocals mix.wav")
+                st.audio(join('separated','mdx_extra_q','mix','vocals.wav'), format='audio/wav')
+                audio_pred = nussl.AudioSignal(join('separated','mdx_extra_q','mix','vocals.wav'))
+                
         fig = plt.figure(figsize=(12, 6))
         nussl.utils.visualize_spectrogram(audio_pred, y_axis='mel')
         st.pyplot(fig)
@@ -203,33 +218,48 @@ else:
 
         with col1:
             "**Le mix :**"
-            audio.export(uploaded_file.name, format=file_type)
-            st.audio(uploaded_file.name, format=file_type)
-            signal = nussl.AudioSignal(uploaded_file.name)
+            audio.export("mix."+file_type, format=file_type)
+            st.audio("mix."+file_type, format=file_type)
+            signal = nussl.AudioSignal("mix."+file_type)
             fig = plt.figure(figsize=(12, 6))
             nussl.utils.visualize_spectrogram(signal, y_axis='mel')
+            plt.ylim(0,freq/2)
             st.pyplot(fig)
         
         with col2:
             "**La voix prédite :**"
-            signal = nussl.AudioSignal(uploaded_file.name)
+            if quel_modele != "Demucs":
+                signal = nussl.AudioSignal("mix."+file_type)
             
-            if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
-                separator = cache_UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
-            elif quel_modele=="Demucs":
-                separator = cache_DemucsModel(signal,"mdx_extra_q",in_path,out_path)
-            elif quel_modele=="Spleeter":
-                separator = SpleeterModel(signal,in_path,out_path)
-            elif quel_modele=="OpenUnmix":
-                separator = OpenUnmixModel(signal,"umx")
-            elif quel_modele=="Repet":
-                separator = nussl.separation.primitive.Repet(signal)
+                if quel_modele=="UNet 8 kHz" or quel_modele=="UNet 4 kHz":
+                    separator = cache_UNetModel(signal,unet,freq,window_length,hop_length,patch_size,nfreq)
+                # elif quel_modele=="Demucs":
+                #     separator = cache_DemucsModel(signal,"mdx_extra_q",in_path,out_path)
+                elif quel_modele=="Spleeter":
+                    separator = SpleeterModel(signal,in_path,out_path)
+                elif quel_modele=="OpenUnmix":
+                    separator = OpenUnmixModel(signal,"umx")
+                elif quel_modele=="Repet":
+                    separator = nussl.separation.primitive.Repet(signal)
    
-            audio_pred = separator()[1]
-            audio_pred.write_audio_to_file('pred.wav')
-            st.audio('pred.wav', format='audio/wav')
+                audio_pred = separator()[1]
+                audio_pred.write_audio_to_file('pred.wav')
+                st.audio('pred.wav', format='audio/wav')
+                
+            else:
+                try:
+                    shutil.copyfile(join(musdb18path,'separated','mdx_extra_q',uploaded_file.name,'vocals.wav'),'vocals.wav')
+                    st.audio('vocals.wav', format='audio/wav')
+                    audio_pred = nussl.AudioSignal('vocals.wav')
+                   
+                except:
+                    os.system("demucs -n mdx_extra_q --two-stems=vocals mix."+file_type)
+                    st.audio('separated/mdx_extra_q/mix/vocals.wav', format='audio/wav')
+                    audio_pred = nussl.AudioSignal('separated/mdx_extra_q/mix/vocals.wav')
+    
             fig = plt.figure(figsize=(12, 6))
             nussl.utils.visualize_spectrogram(audio_pred, y_axis='mel')
+            plt.ylim(0,freq/2)
             st.pyplot(fig)
            
 
